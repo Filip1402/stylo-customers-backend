@@ -51,9 +51,10 @@ async function loginCustomer(email, password) {
     };
 
     const response = await axios.post(URL_LOGIN, data, config);
+
     return response.data;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 }
 
