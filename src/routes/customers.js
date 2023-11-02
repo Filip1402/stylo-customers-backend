@@ -21,6 +21,7 @@ router.post(
   body("email").isEmail().withMessage("Invalid email format"),
   body("first_name").exists().withMessage("First name should not be empty"),
   body("last_name").exists().withMessage("Last name should not be empty"),
+  body("phone_number").exists().withMessage("Phone number should not be empty"),
   async (req, res) => {
     controller.signup(req, res);
   }

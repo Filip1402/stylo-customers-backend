@@ -39,14 +39,15 @@ async function signup(req, res) {
     return res.status(400).json({ Error: errors.array()[0].msg });
   }
 
-  const { first_name, last_name, email, password } = req.body;
+  const { first_name, last_name, email, password, phone_number } = req.body;
 
   try {
     const response = await service.registerCustomer(
       first_name,
       last_name,
       email,
-      password
+      password,
+      phone_number
     );
     const customer = response.customer;
     return res.status(200).json({ customer });

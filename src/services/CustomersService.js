@@ -58,7 +58,7 @@ async function loginCustomer(email, password) {
   }
 }
 
-async function registerCustomer(first_name, last_name, email, password) {
+async function registerCustomer(first_name, last_name, email, password, phone_number) {
   try {
     const bearerToken = await customersAPI.getAccessToken();
     const config = {
@@ -71,7 +71,16 @@ async function registerCustomer(first_name, last_name, email, password) {
       email: email,
       firstName: first_name,
       lastName: last_name,
-      password: password
+      password: password,
+      custom: {
+        type: {
+          key: "customer-phoneNumber",
+          typeId: "type"
+        },
+        fields: {
+          phoneNumber: phone_number
+        }
+      }
     };
 
     const response = await axios.post(URL_GET_CUSTOMERS, data, config);
