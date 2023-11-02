@@ -58,8 +58,33 @@ async function loginCustomer(email, password) {
   }
 }
 
+async function registerCustomer(first_name, last_name, email, password) {
+  try {
+    const bearerToken = await customersAPI.getAccessToken();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    };
+
+    const data = {
+      email: email,
+      firstName: first_name,
+      lastName: last_name,
+      password: password
+    };
+
+    const response = await axios.post(URL_GET_CUSTOMERS, data, config);
+
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
   getAllCustomers,
   getCustomerByEmailAddress,
   loginCustomer,
+  registerCustomer,
 };

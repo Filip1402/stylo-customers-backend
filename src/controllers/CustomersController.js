@@ -1,4 +1,5 @@
 const service = require("../services/CustomersService");
+const { validationResult } = require("express-validator");
 
 async function getAllCustomers(req, res) {
   const customers = await service.getAllCustomers();
@@ -32,8 +33,33 @@ async function login(req, res) {
   }
 }
 
+async function signup(req, res) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ Error: errors.array()[0].msg });
+  }
+
+  const { first_name, last_name, email, password } = req.body;
+
+  try {
+    const response = await service.registerCustomer(
+      first_name,
+      last_name,
+      email,
+      password
+    );
+    const customer = response.customer;
+    return res.status(200).json({ customer });
+  } catch (err) {
+    return res
+      .status(err.response.data.statusCode)
+      .json({ Error: err.response.data.message });
+  }
+}
+
 module.exports = {
   getAllCustomers,
   getCustomerByEmailAddress,
   login,
+  signup,
 };
