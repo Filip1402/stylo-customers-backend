@@ -27,4 +27,8 @@ router.post(
   }
 );
 
+router.post("/activate", async (req, res) => {
+  controller.activateAccount(req, res);
+});
+
 module.exports = router;

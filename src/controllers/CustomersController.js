@@ -47,7 +47,7 @@ async function signup(req, res) {
     );
     const customer = response.customer;
     const token = await service.getActivationToken(customer.id);
-    service.sendActivationMail(email, token)
+    service.sendActivationMail(email, token);
     return res.status(200).json({ customer });
   } catch (err) {
     return res
@@ -56,9 +56,21 @@ async function signup(req, res) {
   }
 }
 
+async function activateAccount(req, res) {
+  const token = req.query["activation_token"];
+  try {
+    const response = await service.activateMail(token);
+    const customer = response.data;
+    return res.status(200).json({ customer });
+  } catch (err) {
+    return res.status(401).json({ error: "Could not activate account" });
+  }
+}
+
 module.exports = {
   getAllCustomers,
   getCustomerByEmailAddress,
   login,
   signup,
+  activateAccount,
 };
