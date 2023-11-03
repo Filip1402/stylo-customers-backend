@@ -46,6 +46,8 @@ async function signup(req, res) {
       phone_number
     );
     const customer = response.customer;
+    const token = await service.getActivationToken(customer.id);
+    service.sendActivationMail(email, token)
     return res.status(200).json({ customer });
   } catch (err) {
     return res

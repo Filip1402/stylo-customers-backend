@@ -3,6 +3,8 @@ const axios = require("axios");
 
 const URL_GET_CUSTOMERS = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers`;
 const URL_LOGIN = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/login`;
+const URL_TOKEN = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers/email-token`;
+const URL_MAILER = "http://localhost:3003/activation";
 
 async function getAllCustomers() {
   try {
@@ -91,9 +93,37 @@ async function registerCustomer(first_name, last_name, email, password, phone_nu
   }
 }
 
+async function getActivationToken(id) {
+  const bearerToken = await customersAPI.getAccessToken();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    };
+
+    const data = {
+      id: id,
+      ttlMinutes: 4320
+    };
+    const response = await axios.post(URL_TOKEN, data, config);
+
+    return response.data.value;
+}
+
+async function sendActivationMail(email, token) {
+  const data = {
+    email: email,
+    activation_token: token
+  };
+  const response = axios.post(URL_MAILER, data, {})
+  return response;
+}
+
 module.exports = {
   getAllCustomers,
   getCustomerByEmailAddress,
   loginCustomer,
   registerCustomer,
+  getActivationToken,
+  sendActivationMail
 };
