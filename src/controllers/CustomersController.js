@@ -13,7 +13,7 @@ async function getCustomerByEmailAddress(req, res) {
   if (customer.length > 0) {
     return res.status(200).json(customer[0]);
   } else {
-    return res.status(401).json({ Error: "Customer doesn't exist" });
+    return res.status(404).json({ Error: "Customer doesn't exist" });
   }
 }
 
@@ -23,7 +23,7 @@ async function login(req, res) {
     const response = await service.loginCustomer(email, password);
     const customer = response.customer;
     const token = jwt.sign(customer, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1h",
+      expiresIn: "1h",
     });
     const refreshToken = jwt.sign(customer, process.env.REFRESH_TOKEN_SECRET);
 
@@ -34,7 +34,6 @@ async function login(req, res) {
       accessToken: token,
       refreshToken: refreshToken,
     });
-   
   } catch (err) {
     console.error(err);
     return res
