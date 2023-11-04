@@ -18,7 +18,7 @@ async function getAllCustomers() {
 
     return response.data.results || [];
   } catch (err) {
-    throw err;
+    console.error(err);
   }
 }
 

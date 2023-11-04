@@ -18,28 +18,30 @@ router.post("/login", async (req, res) => {
   controller.login(req, res);
 });
 
-
 router.post("/token", (req, res) => {
   const refreshToken = req.body.token;
   if (refreshToken == null) return res.status(401);
-  if (!refreshTokens.includes(refreshToken)) return res.status(403);
+  if (refreshTokens.includes(refreshToken))
+    return res.status(403).json({ Error: "Refresh token exists!" });
 
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     (err, customer) => {
       if (err) return res.status(403);
-      const accessToken = jwt.sign(
-        customer.email,
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      else {
+        const accessToken = jwt.sign(
+          customer,
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "1h",
+          }
+        );
+        res.json({ accessToken: accessToken });
+      }
     }
   );
-
-  res.json({ accessToken: accessToken });
+});
 
 router.post(
   "/signup",
