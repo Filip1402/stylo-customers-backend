@@ -22,23 +22,29 @@ async function login(req, res) {
   try {
     const response = await service.loginCustomer(email, password);
     const customer = response.customer;
+
+    if (!customer.isEmailVerified) {
+      return res
+        .status(401)
+        .json({ Error: "Email address of account not verified!" });
+    }
+
     const token = jwt.sign(customer, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "1h",
     });
     const refreshToken = jwt.sign(customer, process.env.REFRESH_TOKEN_SECRET);
 
     return res.status(200).json({
-      Success: "Valid customer credentials",
-      Status: 200,
-      Customer: customer,
+      success: "Valid customer credentials",
+      status: 200,
+      customer: customer,
       accessToken: token,
       refreshToken: refreshToken,
     });
   } catch (err) {
-    console.error(err);
     return res
       .status(401)
-      .json({ error: "Invalid credentials or account doesn't exist" });
+      .json({ Error: "Account with the given credentials not found." });
   }
 }
 
