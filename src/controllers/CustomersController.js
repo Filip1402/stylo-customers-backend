@@ -13,7 +13,7 @@ async function getCustomerByEmailAddress(req, res) {
   if (customer.length > 0) {
     return res.status(200).json(customer[0]);
   } else {
-    return res.status(404).json({ Error: "Customer doesn't exist" });
+    return res.status(404).json({ error: "Customer doesn't exist" });
   }
 }
 
@@ -26,7 +26,7 @@ async function login(req, res) {
     if (!customer.isEmailVerified) {
       return res
         .status(401)
-        .json({ Error: "Email address of account not verified!" });
+        .json({ error: "Email address of account not verified!" });
     }
 
     const token = jwt.sign(customer, process.env.ACCESS_TOKEN_SECRET, {
@@ -35,7 +35,7 @@ async function login(req, res) {
     const refreshToken = jwt.sign(customer, process.env.REFRESH_TOKEN_SECRET);
 
     return res.status(200).json({
-      success: "Valid customer credentials",
+      success: "Login successful.",
       status: 200,
       customer: customer,
       accessToken: token,
@@ -44,7 +44,7 @@ async function login(req, res) {
   } catch (err) {
     return res
       .status(401)
-      .json({ Error: "Account with the given credentials not found." });
+      .json({ error: "Account with the given credentials not found." });
   }
 }
 

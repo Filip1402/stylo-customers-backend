@@ -22,7 +22,7 @@ router.post("/token", (req, res) => {
   const refreshToken = req.body.token;
   if (refreshToken == null) return res.status(401);
   if (refreshTokens.includes(refreshToken))
-    return res.status(403).json({ Error: "Refresh token exists!" });
+    return res.status(403).json({ error: "Refresh token exists!" });
 
   jwt.verify(
     refreshToken,
