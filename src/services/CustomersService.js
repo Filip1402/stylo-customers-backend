@@ -4,7 +4,7 @@ const axios = require("axios");
 const URL_GET_CUSTOMERS = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers`;
 const URL_LOGIN = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/login`;
 const URL_TOKEN = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers/email-token`;
-const URL_MAILER = "http://localhost:3003/activation";
+const URL_MAILER = "http://emails_api:3003/activation";
 const URL_MAIL_ACTIVATION = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers/email/confirm`;
 
 async function getAllCustomers() {
