@@ -1,8 +1,8 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
 router.get("/", (req, res) => {
-  res.json({message: "Hello this is customers microservice!"})
-})
+  res.json({ message: "Homepage" });
+});
 
 module.exports = router;
