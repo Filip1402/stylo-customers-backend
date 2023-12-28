@@ -28,10 +28,7 @@ async function login(req, res) {
         .status(401)
         .json({ error: "Email address of account not verified!" });
     }
-
-    const token = jwt.sign(customer, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = generateAccessToken(req,res,customer);
     const refreshToken = jwt.sign(customer, process.env.REFRESH_TOKEN_SECRET);
 
     return res.status(200).json({
@@ -47,6 +44,26 @@ async function login(req, res) {
       .json({ error: "Account with the given credentials not found." });
   }
 }
+
+function generateAccessToken(req,res,customer)
+{
+  const header = {
+    alg: "HS256",
+    typ: "JWT",
+    kid: process.env.KID,
+  };
+  const payload = {
+    sub: customer.id,
+    email: customer.email,
+  };
+  const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    header: header,
+    expiresIn: "1h",
+  });
+  req.session.jwt = token
+  return token
+}
+
 
 async function signup(req, res) {
   const errors = validationResult(req);
@@ -92,4 +109,5 @@ module.exports = {
   login,
   signup,
   activateAccount,
+  generateAccessToken,
 };
