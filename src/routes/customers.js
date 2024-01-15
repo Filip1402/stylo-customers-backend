@@ -58,4 +58,8 @@ router.post("/activate", async (req, res) => {
   controller.activateAccount(req, res);
 });
 
+router.delete("/:userId", async (req, res) => {
+  controller.deleteAccount(req, res);
+})
+
 module.exports = router;

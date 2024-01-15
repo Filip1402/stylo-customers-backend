@@ -2,6 +2,7 @@ const customersAPI = require("../utils/CommerceToolsApiClient");
 const axios = require("axios");
 
 const URL_GET_CUSTOMERS = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers`;
+const URL_DELETE_CUSTOMER = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers`;
 const URL_LOGIN = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/login`;
 const URL_TOKEN = `${customersAPI.apiURLBase}/${customersAPI.projectKey}/customers/email-token`;
 const URL_MAILER = "http://emails_api:3003/activation";
@@ -22,6 +23,20 @@ async function getAllCustomers() {
   }
 }
 
+async function getCustomerById(id) {
+  try {
+    const bearerToken = await customersAPI.getAccessToken();
+    const response = await axios.get(URL_GET_CUSTOMERS + `/${id}`, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 async function getCustomerByEmailAddress(email) {
   try {
     const bearerToken = await customersAPI.getAccessToken();
@@ -33,7 +48,7 @@ async function getCustomerByEmailAddress(email) {
         where: `email="${email}"`,
       },
     });
-    return response.data.results;
+    return response.data;
   } catch (err) {
     throw err;
   }
@@ -147,6 +162,24 @@ async function activateMail(activation_token) {
   }
 }
 
+async function deleteAccount(id) {
+  try {
+    const customer = await getCustomerById(id);
+    const customerVersion = customer.version;
+    const bearerToken = await customersAPI.getAccessToken();
+    const response = await axios.delete(URL_DELETE_CUSTOMER + `/${id}?version=${customerVersion}`, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (err) {
+    throw(err);
+  }
+}
+
+
 module.exports = {
   getAllCustomers,
   getCustomerByEmailAddress,
@@ -155,4 +188,5 @@ module.exports = {
   getActivationToken,
   sendActivationMail,
   activateMail,
+  deleteAccount
 };

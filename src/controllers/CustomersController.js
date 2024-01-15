@@ -103,6 +103,18 @@ async function activateAccount(req, res) {
   }
 }
 
+async function deleteAccount(req, res) {
+  const id = req.params.userId;
+  try {
+    const deleted = await service.deleteAccount(id);
+    if(deleted.status != 500)
+      return res.status(200).json({success: "User account successfully deleted"})
+
+  } catch (err) {
+    return res.status(err.response.status).json({error: err.response.data.message})
+  }
+}
+
 module.exports = {
   getAllCustomers,
   getCustomerByEmailAddress,
@@ -110,4 +122,5 @@ module.exports = {
   signup,
   activateAccount,
   generateAccessToken,
+  deleteAccount
 };
