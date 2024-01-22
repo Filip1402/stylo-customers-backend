@@ -10,6 +10,7 @@ var cors = require('cors')
 
 var indexRouter = require("./src/routes/index");
 var customersRouter = require("./src/routes/customers");
+var customerAddressesRouter = require("./src/routes/customerAddresses")
 
 var app = express();
 
@@ -30,5 +31,6 @@ app.use(session({
 }));
 app.use("/", indexRouter);
 app.use("/customers", customersRouter);
+app.use("/customers", customerAddressesRouter)
 
 module.exports = app;
