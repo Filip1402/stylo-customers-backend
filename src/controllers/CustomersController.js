@@ -10,8 +10,8 @@ async function getAllCustomers(req, res) {
 async function getCustomerByEmailAddress(req, res) {
   const email = req.params.email;
   const customer = await service.getCustomerByEmailAddress(email);
-  if (customer.length > 0) {
-    return res.status(200).json(customer[0]);
+  if (customer.results.length > 0) {
+    return res.status(200).json(customer.results[0]);
   } else {
     return res.status(404).json({ error: "Customer doesn't exist" });
   }
